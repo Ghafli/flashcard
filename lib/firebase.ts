@@ -1,18 +1,29 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
-  // Replace with your Firebase config
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  apiKey: "AIzaSyCbFgzskHBVVAI-GnI1bfcv6qgNb2yeo04",
+  authDomain: "flashcardaap.firebaseapp.com",
+  databaseURL: "https://flashcardaap-default-rtdb.firebaseio.com",
+  projectId: "flashcardaap",
+  storageBucket: "flashcardaap.firebasestorage.app",
+  messagingSenderId: "44206754596",
+  appId: "1:44206754596:web:9bebd49b6a12498de581b1",
+  measurementId: "G-JZR83FDRZ5"
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize services
 export const auth = getAuth(app);
 export const database = getDatabase(app);
+
+// Initialize analytics only on client side
+let analytics;
+if (typeof window !== 'undefined') {
+  analytics = getAnalytics(app);
+}
+
+export { analytics };
