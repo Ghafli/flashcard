@@ -16,7 +16,8 @@
     "prebuild": "npm run clean",
     "postbuild": "next-sitemap",
     "migrate:up": "ts-node scripts/migrate.ts up",
-    "migrate:down": "ts-node scripts/migrate.ts down"
+    "migrate:down": "ts-node scripts/migrate.ts down",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
