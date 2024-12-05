@@ -1,6 +1,7 @@
 import React from 'react';
-import { Paper, Typography, Box, Grid } from '@mui/material';
-import { School, Timer, TrendingUp } from '@mui/icons-material';
+import { useStudyStats } from '../../lib/hooks/useStudyStats';
+import { Box, Paper, Typography, Grid, CircularProgress, Skeleton, Tooltip } from '@mui/material';
+import { School, Timer, TrendingUp, Event } from '@mui/icons-material';
 
 interface StudyStatsProps {
   stats?: {
@@ -10,53 +11,112 @@ interface StudyStatsProps {
   };
 }
 
-const StudyStats: React.FC<StudyStatsProps> = ({ stats }) => {
-  const formatStudyTime = (minutes: number) => {
-    if (!minutes) return '0h';
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-  };
+const StudyStats: React.FC<StudyStatsProps> = () => {
+  const { stats, loading, error, getFormattedStats } = useStudyStats();
+  
+  if (loading) {
+    return (
+      <Paper sx={{ p: 3 }}>
+        <Typography variant="h6" gutterBottom>Study Statistics</Typography>
+        <Grid container spacing={3}>
+          {[...Array(4)].map((_, index) => (
+            <Grid item xs={6} sm={3} key={index}>
+              <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                <Skeleton variant="circular" width={24} height={24} sx={{ mb: 1 }} />
+                <Skeleton width={80} height={20} sx={{ mb: 1 }} />
+                <Skeleton width={60} height={32} />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    );
+  }
+
+  if (error) {
+    return (
+      <Paper sx={{ p: 3, bgcolor: 'error.light' }}>
+        <Typography color="error">Failed to load study statistics</Typography>
+      </Paper>
+    );
+  }
+
+  const formattedStats = getFormattedStats();
+  if (!formattedStats) return null;
+
+  const statItems = [
+    {
+      icon: <School />,
+      label: 'Cards Studied',
+      value: formattedStats.totalCards.toString(),
+      tooltip: 'Total number of cards you have studied'
+    },
+    {
+      icon: <Timer />,
+      label: 'Study Time',
+      value: formattedStats.totalTime,
+      tooltip: 'Total time spent studying'
+    },
+    {
+      icon: <TrendingUp />,
+      label: 'Success Rate',
+      value: formattedStats.successRate,
+      tooltip: 'Percentage of correct answers'
+    },
+    {
+      icon: <Event />,
+      label: 'Last Study',
+      value: formattedStats.lastStudy,
+      tooltip: 'Last time you studied'
+    }
+  ];
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        Study Statistics
-      </Typography>
+    <Paper sx={{ p: 3 }}>
+      <Typography variant="h6" gutterBottom>Study Statistics</Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <School sx={{ mr: 1, color: 'primary.main' }} />
-            <Box>
-              <Typography variant="subtitle2" color="textSecondary">
-                Cards Studied
-              </Typography>
-              <Typography variant="h6">{stats?.cardsStudied || 0}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Timer sx={{ mr: 1, color: 'secondary.main' }} />
-            <Box>
-              <Typography variant="subtitle2" color="textSecondary">
-                Study Time
-              </Typography>
-              <Typography variant="h6">{formatStudyTime(stats?.studyTime || 0)}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <TrendingUp sx={{ mr: 1, color: 'success.main' }} />
-            <Box>
-              <Typography variant="subtitle2" color="textSecondary">
-                Success Rate
-              </Typography>
-              <Typography variant="h6">{stats?.successRate?.toFixed(1) || '0'}%</Typography>
-            </Box>
-          </Box>
-        </Grid>
+        {statItems.map((item, index) => (
+          <Grid item xs={6} sm={3} key={index}>
+            <Tooltip title={item.tooltip} arrow>
+              <Box 
+                display="flex" 
+                flexDirection="column" 
+                alignItems="center" 
+                textAlign="center"
+                sx={{
+                  p: 1.5,
+                  borderRadius: 1,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                    transform: 'translateY(-2px)',
+                    '& .MuiSvgIcon-root': {
+                      transform: 'scale(1.1)',
+                    }
+                  }
+                }}
+              >
+                <Box 
+                  color="primary.main" 
+                  mb={1}
+                  sx={{
+                    '& .MuiSvgIcon-root': {
+                      transition: 'transform 0.2s ease-in-out'
+                    }
+                  }}
+                >
+                  {item.icon}
+                </Box>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {item.label}
+                </Typography>
+                <Typography variant="h6">
+                  {item.value}
+                </Typography>
+              </Box>
+            </Tooltip>
+          </Grid>
+        ))}
       </Grid>
     </Paper>
   );
