@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { getAnalytics } from 'firebase/analytics';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbFgzskHBVVAI-GnI1bfcv6qgNb2yeo04",
@@ -23,7 +23,15 @@ export const database = getDatabase(app);
 // Initialize analytics only on client side
 let analytics;
 if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    } else {
+      console.warn("Firebase Analytics is not supported in this environment.");
+    }
+  }).catch((error) => {
+    console.error("Error checking Firebase Analytics support:", error);
+  });
 }
 
 export { analytics };
