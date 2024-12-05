@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics, isSupported } from 'firebase/analytics';
+import { get, ref } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbFgzskHBVVAI-GnI1bfcv6qgNb2yeo04",
@@ -35,3 +36,13 @@ if (typeof window !== 'undefined') {
 }
 
 export { analytics };
+
+export const getDeckById = async (deckId: string) => {
+  const deckRef = ref(database, `decks/${deckId}`);
+  const snapshot = await get(deckRef);
+  if (snapshot.exists()) {
+    return snapshot.val();
+  } else {
+    throw new Error('Deck not found');
+  }
+};
