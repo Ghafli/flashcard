@@ -10,9 +10,6 @@ import { useRouter } from 'next/router';
 if (typeof TextEncoder === 'undefined') {
   global.TextEncoder = require('util').TextEncoder;
 }
-if (typeof TextDecoder === 'undefined') {
-  global.TextDecoder = require('util').TextDecoder;
-}
 
 // Mock Firebase modules
 jest.mock('firebase/analytics', () => ({
@@ -58,17 +55,18 @@ jest.mock('../hooks/useFirebaseDB', () => ({
 beforeAll(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'log').mockImplementation(() => {});
 });
 
-it('renders Dashboard component', async () => {
-  render(
-    <SessionProvider session={null}>
-      <BrowserRouter>
-        <Dashboard />
-      </BrowserRouter>
-    </SessionProvider>
-  );
-  const linkElement = await screen.findByText(/Dashboard/i);
-  expect(linkElement).toBeInTheDocument();
+describe('Dashboard Component', () => {
+  it('renders Dashboard component', async () => {
+    render(
+      <SessionProvider session={null}>
+        <BrowserRouter>
+          <Dashboard />
+        </BrowserRouter>
+      </SessionProvider>
+    );
+    const linkElement = await screen.findByText(/Dashboard/i);
+    expect(linkElement).toBeInTheDocument();
+  });
 });
