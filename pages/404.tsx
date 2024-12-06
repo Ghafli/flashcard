@@ -30,7 +30,7 @@ const NotFound = () => {
         </Typography>
         
         <Typography variant="body1" color="text.secondary" paragraph>
-          Oops! The page you are looking for doesn't exist.
+          Oops! The page you are looking for doesn&apos;t exist.
         </Typography>
         
         <Box sx={{ mt: 4 }}>

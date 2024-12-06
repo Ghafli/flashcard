@@ -27,7 +27,7 @@ export const useRecentDecks = (limit: number = 5) => {
           const decksData = snapshot.val();
           if (decksData) {
             const decksArray = Object.values(decksData)
-              .sort((a: any, b: any) => b.lastStudied - a.lastStudied);
+              .sort((a: { lastStudied: number }, b: { lastStudied: number }) => b.lastStudied - a.lastStudied);
             setDecks(decksArray as Deck[]);
           } else {
             setDecks([]);

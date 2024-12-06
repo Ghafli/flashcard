@@ -22,7 +22,7 @@ export const useStudyStats = () => {
     
     const unsubscribe = onValue(statsRef, async (snapshot) => {
       try {
-        let currentStats = snapshot.val();
+        const currentStats = snapshot.val();
         
         if (!currentStats) {
           await initializeStats(user.uid);
@@ -31,13 +31,13 @@ export const useStudyStats = () => {
 
         setStats(currentStats);
         setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load stats'));
+      } catch (error) {
+        setError(error instanceof Error ? error : new Error('Failed to load stats'));
       } finally {
         setLoading(false);
       }
-    }, (err) => {
-      setError(err instanceof Error ? err : new Error('Failed to load stats'));
+    }, (error) => {
+      setError(error instanceof Error ? error : new Error('Failed to load stats'));
       setLoading(false);
     });
 
@@ -86,7 +86,7 @@ export const useStudyStats = () => {
       };
 
       await update(statsRef, updatedStats);
-    } catch (err) {
+    } catch (error) {
       throw new Error('Failed to update stats');
     }
   };
