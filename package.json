@@ -2,7 +2,7 @@
   "name": "flashcard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ghafli.github.io/flashcard",
+  "homepage": "https://ghafli.github.io/flashcard/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
