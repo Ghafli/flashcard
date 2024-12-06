@@ -14,8 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const decksRef = ref(database, `users/${session.user.id}/decks`);
 
     switch (req.method) {
-      case 'GET':
-        let decks = [];
+      case 'GET': {
+        const decks = [];
 
         onValue(decksRef, (snapshot) => {
           snapshot.forEach((childSnapshot) => {
@@ -26,8 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         return res.status(200).json(decks);
+      }
 
-      case 'POST':
+      case 'POST': {
         const newDeckRef = push(decksRef);
         const newDeckData = {
           ...req.body,
@@ -37,10 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         };
         await set(newDeckRef, newDeckData);
         return res.status(201).json({ id: newDeckRef.key, ...newDeckData });
+      }
 
-      default:
+      default: {
         res.setHeader('Allow', ['GET', 'POST']);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
+      }
     }
   } catch (error) {
     console.error('API Error:', error);

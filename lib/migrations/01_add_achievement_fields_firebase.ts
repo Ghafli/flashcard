@@ -49,7 +49,7 @@ export async function migrateAchievements() {
     }
 
     const users = snapshot.val();
-    const updates: { [path: string]: any } = {};
+    const updates: { [path: string]: unknown } = {};
 
     // For each user
     for (const [userId, userData] of Object.entries(users)) {

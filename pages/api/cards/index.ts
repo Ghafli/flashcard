@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     switch (req.method) {
-      case 'GET':
+      case 'GET': {
         const { deckId } = req.query;
         const deckIdString = Array.isArray(deckId) ? deckId[0] : deckId;
 
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const cardsRef = ref(database, `users/${session.user.id}/decks/${deckIdString}/cards`);
-        let cards = [];
+        const cards = [];
 
         onValue(cardsRef, (snapshot) => {
           snapshot.forEach((childSnapshot) => {
@@ -43,8 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         return res.status(200).json(cards);
-
-      case 'POST':
+      }
+      case 'POST': {
         const { deckId: newCardDeckId } = req.body;
         const newCardDeckIdString = Array.isArray(newCardDeckId) ? newCardDeckId[0] : newCardDeckId;
 
@@ -71,10 +71,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         return res.status(201).json({ id: newCardRef.key, ...req.body });
-
-      default:
+      }
+      default: {
         res.setHeader('Allow', ['GET', 'POST']);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
+      }
     }
   } catch (error) {
     console.error('API Error:', error);
