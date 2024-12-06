@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Dashboard from '../pages/dashboard/index';
 
 // Mock Firebase to prevent real initialization
@@ -13,8 +14,8 @@ beforeAll(() => {
 });
 
 // Basic test to check if the Dashboard component renders without crashing
-it('renders Dashboard component', () => {
+it('renders Dashboard component', async () => {
   render(<Dashboard />);
-  const linkElement = screen.getByText(/Dashboard/i);
+  const linkElement = await screen.findByText(/Dashboard/i);
   expect(linkElement).toBeInTheDocument();
 });

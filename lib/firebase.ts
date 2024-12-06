@@ -2,16 +2,17 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics, isSupported } from 'firebase/analytics';
+import { get, ref } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCbFgzskHBVVAI-GnI1bfcv6qgNb2yeo04",
-  authDomain: "flashcardaap.firebaseapp.com",
-  databaseURL: "https://flashcardaap-default-rtdb.firebaseio.com",
-  projectId: "flashcardaap",
-  storageBucket: "flashcardaap.firebasestorage.app",
-  messagingSenderId: "44206754596",
-  appId: "1:44206754596:web:9bebd49b6a12498de581b1",
-  measurementId: "G-JZR83FDRZ5"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -35,3 +36,13 @@ if (typeof window !== 'undefined') {
 }
 
 export { analytics };
+
+export const getDeckById = async (deckId: string) => {
+  const deckRef = ref(database, `decks/${deckId}`);
+  const snapshot = await get(deckRef);
+  if (snapshot.exists()) {
+    return snapshot.val();
+  } else {
+    throw new Error('Deck not found');
+  }
+};
