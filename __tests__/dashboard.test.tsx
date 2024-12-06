@@ -6,6 +6,34 @@ import { BrowserRouter } from 'react-router-dom';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
+// Polyfill TextEncoder
+if (typeof TextEncoder === 'undefined') {
+  global.TextEncoder = require('util').TextEncoder;
+}
+if (typeof TextDecoder === 'undefined') {
+  global.TextDecoder = require('util').TextDecoder;
+}
+
+// Mock Firebase modules
+jest.mock('firebase/analytics', () => ({
+  getAnalytics: jest.fn(),
+  isSupported: jest.fn(() => Promise.resolve(false))
+}));
+
+jest.mock('firebase/app', () => ({
+  initializeApp: jest.fn()
+}));
+
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn()
+}));
+
+jest.mock('firebase/database', () => ({
+  getDatabase: jest.fn(),
+  ref: jest.fn(),
+  get: jest.fn()
+}));
+
 // Mock Next Router
 jest.mock('next/router', () => ({
   useRouter: () => ({
@@ -25,12 +53,6 @@ jest.mock('../hooks/useFirebaseDB', () => ({
       loading: false,
     }),
   }),
-}));
-
-// Mock Firebase to prevent real initialization
-jest.mock('../lib/firebase', () => ({
-  getAnalytics: jest.fn(),
-  isSupported: jest.fn(() => Promise.resolve(false)),
 }));
 
 beforeAll(() => {
