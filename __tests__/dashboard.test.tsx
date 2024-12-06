@@ -18,7 +18,7 @@ jest.mock('next/router', () => ({
 }));
 
 // Mock useFirebaseDB hook
-jest.mock('@/hooks/useFirebaseDB', () => ({
+jest.mock('../hooks/useFirebaseDB', () => ({
   useFirebaseDB: () => ({
     useDecks: () => ({
       decks: [],
