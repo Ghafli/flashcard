@@ -68,12 +68,5 @@
     "jest-environment-jsdom": "^29.7.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.2"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/flashcard/$1"
-    }
   }
 }
