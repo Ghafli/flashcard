@@ -6,6 +6,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
+// Add TextEncoder polyfill
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // Mock Next Router
 jest.mock('next/router', () => ({
   useRouter: () => ({
